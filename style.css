@@ -5,7 +5,7 @@
   --container-border: 2px solid rgba(89, 89, 89, 0.1);
   --text-color: #000;
   --text-color-darker: rgba(0, 0, 0, 0.5);
-  --accent-color: #595959; /* or a custom accent */
+  --accent-color: #595959; /* accent border */
   --button-bg: rgba(0, 0, 0, 0.22);
   --button-border: 2px solid rgba(0, 0, 0, 0.12);
   --button-hover-bg: rgba(0, 0, 0, 0.32);
@@ -26,7 +26,7 @@ body {
   min-height: 100vh;
 }
 
-/* Profile container / card */
+/* Profile card */
 .profile-card {
   background: var(--container-bg);
   border: var(--container-border);
@@ -56,7 +56,7 @@ body {
   color: var(--text-color);
 }
 
-/* Subtext (location / tagline) */
+/* Subtext (tagline / bio) */
 .profile-card .subtext {
   margin: 5px 0 20px;
   font-size: 0.9rem;
