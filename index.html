@@ -19,7 +19,6 @@
     </div>
   </div>
 
-  <!-- Audio -->
   <audio id="bg-music" autoplay loop muted playsinline></audio>
 
   <!-- Volume button -->
@@ -34,10 +33,8 @@
       "https://r2.guns.lol/c0f65a19-48a4-4ee7-9ff5-c1c43291f7cd.mp3",
       "https://r2.guns.lol/1ab120d8-a5f3-4ed2-8590-295414af1ba2.mp3"
     ];
-    const randomTrack = tracks[Math.floor(Math.random() * tracks.length)];
-    audio.src = randomTrack;
+    audio.src = tracks[Math.floor(Math.random() * tracks.length)];
 
-    // --- USER GESTURE UNLOCK ---
     function enableAudio() {
       audio.muted = false;
       audio.volume = 1.0;
@@ -53,7 +50,6 @@
     window.addEventListener("touchstart", enableAudio);
     window.addEventListener("keydown", enableAudio);
 
-    // --- VOLUME BUTTON ---
     volumeBtn.addEventListener("click", () => {
       audio.muted = !audio.muted;
       updateVolumeIcon();
