@@ -3,111 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>YooBlueyyy | Profile</title>
-  <style>
-    /* ------ BASE & COLORS ------ */
-    :root {
-      --bg-color: #000; /* dark background */
-      --container-bg: rgba(89, 89, 89, 0.2);
-      --container-border: 2px solid rgba(89, 89, 89, 0.1);
-      --text-color: #000;
-      --text-color-darker: rgba(0, 0, 0, 0.5);
-      --accent-color: #595959; /* accent border */
-      --button-bg: rgba(0, 0, 0, 0.22);
-      --button-border: 2px solid rgba(0, 0, 0, 0.12);
-      --button-hover-bg: rgba(0, 0, 0, 0.32);
-      --button-radius: 12px;
-      --profile-radius: 20px;
-    }
-
-    /* ------ BODY & BACKGROUND ------ */
-    body {
-      margin: 0;
-      padding: 0;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      font-family: 'Satoshi', sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    /* Profile card */
-    .profile-card {
-      background: var(--container-bg);
-      border: var(--container-border);
-      border-radius: var(--profile-radius);
-      padding: 30px;
-      backdrop-filter: blur(3px);
-      text-align: center;
-      width: 90%;
-      max-width: 400px;
-    }
-
-    /* Profile image */
-    .profile-card .avatar {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin: 0 auto 20px;
-      border: 2px solid var(--accent-color);
-    }
-
-    /* Username / title */
-    .profile-card h1 {
-      margin: 0;
-      font-size: 2rem;
-      font-weight: 600;
-      color: var(--text-color);
-    }
-
-    /* Subtext (tagline / bio) */
-    .profile-card .subtext {
-      margin: 5px 0 20px;
-      font-size: 0.9rem;
-      font-weight: 400;
-      color: var(--text-color-darker);
-    }
-
-    /* Buttons / links */
-    .profile-card .links a {
-      display: block;
-      margin: 8px 0;
-      padding: 10px 15px;
-      text-decoration: none;
-      background: var(--button-bg);
-      border: var(--button-border);
-      border-radius: var(--button-radius);
-      color: var(--text-color);
-      transition: background 0.2s;
-    }
-
-    .profile-card .links a:hover {
-      background: var(--button-hover-bg);
-    }
-
-    /* Volume / Audio Button (corner) */
-    #volume-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: var(--button-bg);
-      color: var(--text-color);
-      border: var(--button-border);
-      border-radius: var(--button-radius);
-      font-size: 28px;
-      padding: 10px 14px;
-      cursor: pointer;
-      z-index: 1000;
-      transition: background 0.2s;
-    }
-
-    #volume-btn:hover {
-      background: var(--button-hover-bg);
-    }
-  </style>
+  <title>YoobBlueyyy Profile</title>
+  <!-- Link to the external CSS -->
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -124,9 +22,7 @@
     </div>
   </div>
 
-  <!-- Optional: Volume button -->
   <div id="volume-btn">🔊</div>
 
 </body>
 </html>
-
