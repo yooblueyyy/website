@@ -49,35 +49,53 @@
       background-color: #63b3ff;
     }
 
-    #volume-btn {
+    /* Music Player Styling */
+    #music-player {
       position: fixed;
       bottom: 20px;
-      right: 20px;
-      font-size: 24px;
-      background: rgba(0,0,0,0.5);
-      color: white;
-      border: none;
-      border-radius: 50%;
-      padding: 10px;
-      cursor: pointer;
+      left: 20px;
+      width: 250px;
+      background: rgba(0,0,0,0.7);
+      border-radius: 15px;
+      padding: 15px;
+      cursor: move;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       z-index: 1000;
+      user-select: none;
     }
 
-    #volume-slider-container {
-      position: fixed;
-      bottom: 70px;
-      right: 20px;
-      width: 150px;
-      background: rgba(0,0,0,0.6);
-      padding: 10px;
-      border-radius: 10px;
-      display: none;
-      cursor: move;
-      z-index: 999;
+    #music-player button {
+      margin: 5px;
+      background: rgba(255,255,255,0.2);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+
+    #music-player button:hover {
+      background: rgba(255,255,255,0.4);
+    }
+
+    #track-name {
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    #player-controls {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
     }
 
     #volume-slider {
       width: 100%;
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -96,75 +114,88 @@
   </div>
 
   <!-- Background Music -->
-  <audio id="bg-music" autoplay loop playsinline></audio>
+  <audio id="bg-music" loop playsinline></audio>
 
-  <!-- Volume Button -->
-  <button id="volume-btn">🔊</button>
-
-  <!-- Draggable Volume Slider -->
-  <div id="volume-slider-container">
+  <!-- Draggable Music Player -->
+  <div id="music-player">
+    <div id="track-name">Track 1</div>
+    <div id="player-controls">
+      <button id="play-pause">▶️</button>
+      <button id="mute-btn">🔊</button>
+    </div>
     <input type="range" id="volume-slider" min="0" max="100" value="100">
   </div>
 
   <script>
     const audio = document.getElementById("bg-music");
-    const volumeBtn = document.getElementById("volume-btn");
-    const sliderContainer = document.getElementById("volume-slider-container");
+    const playPauseBtn = document.getElementById("play-pause");
+    const muteBtn = document.getElementById("mute-btn");
     const slider = document.getElementById("volume-slider");
-
-    // Music list
+    const trackName = document.getElementById("track-name");
     const tracks = [
-      "https://r2.guns.lol/c0f65a19-48a4-4ee7-9ff5-c1c43291f7cd.mp3",
-      "https://r2.guns.lol/1ab120d8-a5f3-4ed2-8590-295414af1ba2.mp3"
+      { src: "https://r2.guns.lol/c0f65a19-48a4-4ee7-9ff5-c1c43291f7cd.mp3", name: "Track 1" },
+      { src: "https://r2.guns.lol/1ab120d8-a5f3-4ed2-8590-295414af1ba2.mp3", name: "Track 2" }
     ];
 
     // Pick random track
-    audio.src = tracks[Math.floor(Math.random() * tracks.length)];
+    const randomTrack = tracks[Math.floor(Math.random() * tracks.length)];
+    audio.src = randomTrack.src;
+    trackName.textContent = randomTrack.name;
 
-    // Try autoplay
-    audio.muted = false;
-    audio.volume = 1.0;
-    audio.play().catch(() => console.log("Autoplay blocked — waiting for user interaction."));
+    audio.volume = 1;
+    audio.play().catch(() => console.log("Autoplay blocked."));
 
-    // Mute toggle
-    volumeBtn.addEventListener("click", () => {
+    // Play / Pause
+    playPauseBtn.addEventListener("click", () => {
+      if (audio.paused) {
+        audio.play();
+        playPauseBtn.textContent = "⏸️";
+      } else {
+        audio.pause();
+        playPauseBtn.textContent = "▶️";
+      }
+    });
+
+    // Mute
+    muteBtn.addEventListener("click", () => {
       audio.muted = !audio.muted;
-      updateVolumeIcon();
-      sliderContainer.style.display = "block"; // show slider on first click
+      updateMuteIcon();
     });
 
-    // Slider input
-    slider.addEventListener("input", () => {
-      const volumeValue = slider.value / 100;
-      audio.volume = volumeValue;
-      audio.muted = volumeValue === 0;
-      updateVolumeIcon();
-    });
-
-    function updateVolumeIcon() {
-      volumeBtn.textContent = (audio.muted || audio.volume === 0) ? "🔇" : "🔊";
+    function updateMuteIcon() {
+      muteBtn.textContent = audio.muted || audio.volume === 0 ? "🔇" : "🔊";
     }
 
-    // --- DRAGGABLE FUNCTIONALITY ---
+    // Volume slider
+    slider.addEventListener("input", () => {
+      const volume = slider.value / 100;
+      audio.volume = volume;
+      audio.muted = volume === 0;
+      updateMuteIcon();
+    });
+
+    // --- Draggable Music Player ---
+    const player = document.getElementById("music-player");
     let isDragging = false;
     let offsetX = 0;
     let offsetY = 0;
 
-    sliderContainer.addEventListener("mousedown", (e) => {
+    player.addEventListener("mousedown", (e) => {
       isDragging = true;
-      offsetX = e.clientX - sliderContainer.getBoundingClientRect().left;
-      offsetY = e.clientY - sliderContainer.getBoundingClientRect().top;
+      offsetX = e.clientX - player.getBoundingClientRect().left;
+      offsetY = e.clientY - player.getBoundingClientRect().top;
     });
 
     document.addEventListener("mousemove", (e) => {
       if (!isDragging) return;
-      sliderContainer.style.left = (e.clientX - offsetX) + "px";
-      sliderContainer.style.top = (e.clientY - offsetY) + "px";
+      player.style.left = (e.clientX - offsetX) + "px";
+      player.style.top = (e.clientY - offsetY) + "px";
     });
 
     document.addEventListener("mouseup", () => {
       isDragging = false;
     });
   </script>
+
 </body>
 </html>
