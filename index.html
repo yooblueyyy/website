@@ -1,155 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>@yooblueyyy</title>
-  <link rel="stylesheet" href="style.css" />
-  <style>
-    /* minimal styles for visible play button fallback */
-    #play-fallback {
-      position: fixed;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      padding: 14px 22px;
-      background: rgba(0,0,0,0.8);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      cursor: pointer;
-      display: none;
-      z-index: 9999;
-    }
-    #play-fallback.show { display: block; }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@yooblueyyy</title>
+    <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
-  <div class="container">
-    <a href="https://github.com/yooblueyyy" target="_blank">
-      <img src="pfp.jpg" alt="yooblueyyy's Profile Picture" class="profile-img" />
-    </a>
-    <h1>Hey, I'm yooblueyyy!</h1>
-    <p>yuh</p>
-    <div class="buttons">
-      <a href="links.html" class="button">Links</a>
-      <a href="contact.html" class="button">Contact</a>
+    <div class="container">
+        <a href="https://github.com/yooblueyyy" target="_blank">
+            <img src="pfp.jpg"
+                alt="yooblueyyy's Profile Picture" class="profile-img" />
+        </a>
+        <h1>Hey, I'm yooblueyyy!</h1>
+        <p>yuh</p>
+        <div class="buttons">
+            <a href="links.html" class="button">Links</a>
+            <a href="contact.html" class="button">Contact</a>
+        </div>
     </div>
-  </div>
 
-  <!-- audio element -->
-  <audio
-    id="bg-music"
-    src="https://r2.guns.lol/c0f65a19-48a4-4ee7-9ff5-c1c43291f7cd.mp3"
-    loop
-    preload="auto"
-    playsinline
-    crossorigin="anonymous"
-  ></audio>
+    <!-- Background Audio -->
+    <audio id="bg-music" 
+           src="https://r2.guns.lol/c0f65a19-48a4-4ee7-9ff5-c1c43291f7cd.mp3"
+           autoplay 
+           loop 
+           muted
+           playsinline>
+    </audio>
 
-  <!-- fallback play button shown if autoplay blocked -->
-  <button id="play-fallback" aria-label="Play background music">Play background music</button>
+    <script>
+        const audio = document.getElementById("bg-music");
 
-  <script>
-    (function () {
-      const audio = document.getElementById('bg-music');
-      const fallback = document.getElementById('play-fallback');
+        // Function to unmute + play audio after user interaction
+        function unmuteAudio() {
+            audio.muted = false;
+            audio.volume = 1.0;
 
-      // optional: start muted (muted autoplay is more likely to be allowed)
-      // audio.muted = true; // uncomment if you want to try muted autoplay first
+            audio.play().catch(() => {});
 
-      audio.volume = 0.6; // set reasonable default
-
-      // helper to attempt play and log outcome
-      function tryPlay() {
-        return audio.play()
-          .then(() => {
-            console.log('Audio started playing');
-            fallback.classList.remove('show');
-            return true;
-          })
-          .catch((err) => {
-            console.warn('Audio play() failed:', err && err.name ? err.name : err);
-            return false;
-          });
-      }
-
-      // attempt to autoplay immediately
-      tryPlay().then((ok) => {
-        if (!ok) {
-          // autoplay blocked or failed — listen for user gestures
-          console.log('Autoplay blocked — waiting for user gesture.');
-
-          // list of gestures that count as user interaction
-          const gestures = ['click', 'touchstart', 'pointerdown', 'keydown', 'mousemove'];
-
-          const onUserGesture = async (ev) => {
-            // remove listeners after first gesture
-            gestures.forEach((g) => document.removeEventListener(g, onUserGesture));
-            // if you started muted, unmute here to allow sound after gesture:
-            if (audio.muted) {
-              audio.muted = false;
-              // optional: fade in from zero
-              audio.volume = 0;
-              try {
-                await audio.play();
-                // fade volume in quickly
-                let v = 0;
-                const fade = setInterval(() => {
-                  v += 0.05;
-                  audio.volume = Math.min(v, 0.6);
-                  if (audio.volume >= 0.6) clearInterval(fade);
-                }, 50);
-              } catch (err) {
-                console.warn('Play after gesture failed:', err);
-                // show fallback button if still failing
-                fallback.classList.add('show');
-              }
-            } else {
-              // if not muted just try to play
-              const ok2 = await tryPlay();
-              if (!ok2) fallback.classList.add('show');
-            }
-          };
-
-          gestures.forEach((g) => document.addEventListener(g, onUserGesture, {passive: true}));
-          // also show fallback button after a short delay (user might not interact)
-          setTimeout(() => {
-            // only show if still paused
-            if (audio.paused) fallback.classList.add('show');
-          }, 1000);
+            // Remove listeners so it only triggers once
+            window.removeEventListener("click", unmuteAudio);
+            window.removeEventListener("keydown", unmuteAudio);
+            window.removeEventListener("touchstart", unmuteAudio);
         }
-      });
 
-      // fallback button handler
-      fallback.addEventListener('click', async () => {
-        try {
-          // if audio was muted for autoplay trick, unmute now
-          if (audio.muted) audio.muted = false;
-          const ok = await tryPlay();
-          if (ok) fallback.classList.remove('show');
-        } catch (err) {
-          console.error('Fallback click play error:', err);
-        }
-      });
+        // Any user interaction will unmute the audio
+        window.addEventListener("click", unmuteAudio);
+        window.addEventListener("keydown", unmuteAudio);
+        window.addEventListener("touchstart", unmuteAudio);
+    </script>
 
-      // ----- Debugging helpers -----
-      // Print network/load errors for the audio element to console
-      audio.addEventListener('error', (e) => {
-        const a = audio;
-        console.error('Audio element error event:', e);
-        console.log('audio.readyState:', a.readyState, 'audio.networkState:', a.networkState);
-        if (a.error) {
-          console.error('MediaError code:', a.error.code, 'message:', a.error.message || '(no message)');
-        }
-      });
-
-      // Log when metadata is loaded (good sign)
-      audio.addEventListener('loadedmetadata', () => console.log('Audio metadata loaded — duration:', audio.duration));
-      audio.addEventListener('canplay', () => console.log('Audio canplay event'));
-      audio.addEventListener('canplaythrough', () => console.log('Audio canplaythrough event'));
-    })();
-  </script>
 </body>
+
 </html>
