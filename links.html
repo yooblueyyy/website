@@ -24,6 +24,38 @@
             <a href="https://github.com/yooblueyyy" class="button" target="_blank">GitHub</a>
         </div>
     </div>
+      <!-- Autoplaying audio unmuted -->
+  <audio id="bg-music" autoplay loop playsinline></audio>
+
+  <!-- Volume button -->
+  <button id="volume-btn">🔊</button>
+
+  <script>
+    const audio = document.getElementById("bg-music");
+    const volumeBtn = document.getElementById("volume-btn");
+
+    // --- MUSIC SHUFFLE ---
+    const tracks = [
+      "https://r2.guns.lol/c0f65a19-48a4-4ee7-9ff5-c1c43291f7cd.mp3",
+      "https://r2.guns.lol/1ab120d8-a5f3-4ed2-8590-295414af1ba2.mp3"
+    ];
+    audio.src = tracks[Math.floor(Math.random() * tracks.length)];
+
+    // Try to play immediately unmuted
+    audio.muted = false;
+    audio.volume = 1.0;
+    audio.play().catch(err => {
+      console.log("Autoplay blocked by browser, user interaction needed.");
+    });
+
+    volumeBtn.addEventListener("click", () => {
+      audio.muted = !audio.muted;
+      updateVolumeIcon();
+    });
+
+    function updateVolumeIcon() {
+      volumeBtn.textContent = audio.muted ? "🔇" : "🔊";
+    }
 
     <div class="extra-box">
         <div class="buttons">
