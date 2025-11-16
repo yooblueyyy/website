@@ -6,7 +6,6 @@
   <title>yooblueyyy</title>
   <link rel="stylesheet" href="style.css" />
   <style>
-    /* Basic styling */
     body, html {
       margin: 0;
       padding: 0;
@@ -61,10 +60,29 @@
       border-radius: 50%;
       padding: 10px;
       cursor: pointer;
+      z-index: 1000;
+    }
+
+    #volume-slider-container {
+      position: fixed;
+      bottom: 70px;
+      right: 20px;
+      width: 150px;
+      background: rgba(0,0,0,0.6);
+      padding: 10px;
+      border-radius: 10px;
+      display: none;
+      cursor: move;
+      z-index: 999;
+    }
+
+    #volume-slider {
+      width: 100%;
     }
   </style>
 </head>
 <body>
+
   <div class="container">
     <img src="pfp.jpg" alt="Profile Picture" class="profile-img" />
     <h1>Hey, I'm <span class="name">yooblueyyy</span></h1>
@@ -77,38 +95,76 @@
     </div>
   </div>
 
-  <!-- Autoplaying audio unmuted -->
+  <!-- Background Music -->
   <audio id="bg-music" autoplay loop playsinline></audio>
 
-  <!-- Volume button -->
+  <!-- Volume Button -->
   <button id="volume-btn">🔊</button>
+
+  <!-- Draggable Volume Slider -->
+  <div id="volume-slider-container">
+    <input type="range" id="volume-slider" min="0" max="100" value="100">
+  </div>
 
   <script>
     const audio = document.getElementById("bg-music");
     const volumeBtn = document.getElementById("volume-btn");
+    const sliderContainer = document.getElementById("volume-slider-container");
+    const slider = document.getElementById("volume-slider");
 
-    // --- MUSIC SHUFFLE ---
+    // Music list
     const tracks = [
       "https://r2.guns.lol/c0f65a19-48a4-4ee7-9ff5-c1c43291f7cd.mp3",
       "https://r2.guns.lol/1ab120d8-a5f3-4ed2-8590-295414af1ba2.mp3"
     ];
+
+    // Pick random track
     audio.src = tracks[Math.floor(Math.random() * tracks.length)];
 
-    // Try to play immediately unmuted
+    // Try autoplay
     audio.muted = false;
     audio.volume = 1.0;
-    audio.play().catch(err => {
-      console.log("Autoplay blocked by browser, user interaction needed.");
-    });
+    audio.play().catch(() => console.log("Autoplay blocked — waiting for user interaction."));
 
+    // Mute toggle
     volumeBtn.addEventListener("click", () => {
       audio.muted = !audio.muted;
+      updateVolumeIcon();
+      sliderContainer.style.display = "block"; // show slider on first click
+    });
+
+    // Slider input
+    slider.addEventListener("input", () => {
+      const volumeValue = slider.value / 100;
+      audio.volume = volumeValue;
+      audio.muted = volumeValue === 0;
       updateVolumeIcon();
     });
 
     function updateVolumeIcon() {
-      volumeBtn.textContent = audio.muted ? "🔇" : "🔊";
+      volumeBtn.textContent = (audio.muted || audio.volume === 0) ? "🔇" : "🔊";
     }
+
+    // --- DRAGGABLE FUNCTIONALITY ---
+    let isDragging = false;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    sliderContainer.addEventListener("mousedown", (e) => {
+      isDragging = true;
+      offsetX = e.clientX - sliderContainer.getBoundingClientRect().left;
+      offsetY = e.clientY - sliderContainer.getBoundingClientRect().top;
+    });
+
+    document.addEventListener("mousemove", (e) => {
+      if (!isDragging) return;
+      sliderContainer.style.left = (e.clientX - offsetX) + "px";
+      sliderContainer.style.top = (e.clientY - offsetY) + "px";
+    });
+
+    document.addEventListener("mouseup", () => {
+      isDragging = false;
+    });
   </script>
 </body>
 </html>
