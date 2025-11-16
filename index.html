@@ -1,94 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>@yooblueyyy</title>
-    <link rel="stylesheet" href="style.css" />
-
-    <style>
-        /* Volume Button Styles */
-        #volume-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(0,0,0,0.7);
-            color: white;
-            border: none;
-            padding: 12px 15px;
-            font-size: 20px;
-            border-radius: 10px;
-            cursor: pointer;
-            z-index: 9999;
-            user-select: none;
-        }
-
-        #volume-btn:hover {
-            background: rgba(0,0,0,0.9);
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>yooblueyyy</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
-    <div class="container">
-        <a href="https://github.com/yooblueyyy" target="_blank">
-            <img src="pfp.jpg"
-                alt="yooblueyyy's Profile Picture" class="profile-img" />
-        </a>
-        <h1>Hey, I'm yooblueyyy!</h1>
-        <p>yuh</p>
-        <div class="buttons">
-            <a href="links.html" class="button">Links</a>
-            <a href="contact.html" class="button">Contact</a>
-        </div>
+  <div class="container">
+    <img src="pfp.jpg" alt="Profile Picture" class="profile-img" />
+    <h1>Hey, I'm <span class="name">yooblueyyy</span></h1>
+    <p class="tagline">Just vibin’ on the internet.</p>
+
+    <div class="links">
+      <a href="https://github.com/yooblueyyy" target="_blank" class="button">GitHub</a>
+      <a href="links.html" class="button">More Links</a>
+      <a href="contact.html" class="button">Contact Me</a>
     </div>
+  </div>
 
-    <!-- Background Audio -->
-    <audio id="bg-music" 
-           src="https://r2.guns.lol/c0f65a19-48a4-4ee7-9ff5-c1c43291f7cd.mp3"
-           autoplay 
-           loop 
-           muted
-           playsinline>
-    </audio>
+  <audio id="bg-music" src="https://r2.guns.lol/c0f65a19-48a4-4ee7-9ff5-c1c43291f7cd.mp3" autoplay loop muted playsinline></audio>
 
-    <!-- Volume Toggle Button -->
-    <button id="volume-btn">🔇</button>
+  <button id="volume-btn">🔇</button>
 
-    <script>
-        const audio = document.getElementById("bg-music");
-        const volumeBtn = document.getElementById("volume-btn");
+  <script>
+    const audio = document.getElementById("bg-music");
+    const volumeBtn = document.getElementById("volume-btn");
 
-        // Unlock audio after first user interaction
-        function enableAudio() {
-            audio.muted = false;
-            audio.volume = 1.0;
-            audio.play().catch(() => {});
+    function enableAudio() {
+      audio.muted = false;
+      audio.volume = 1.0;
+      audio.play().catch(() => {});
+      window.removeEventListener("click", enableAudio);
+      window.removeEventListener("touchstart", enableAudio);
+      window.removeEventListener("keydown", enableAudio);
+      updateVolumeIcon();
+    }
 
-            window.removeEventListener("click", enableAudio);
-            window.removeEventListener("touchstart", enableAudio);
-            window.removeEventListener("keydown", enableAudio);
+    window.addEventListener("click", enableAudio);
+    window.addEventListener("touchstart", enableAudio);
+    window.addEventListener("keydown", enableAudio);
 
-            updateButton();
-        }
+    volumeBtn.addEventListener("click", () => {
+      audio.muted = !audio.muted;
+      updateVolumeIcon();
+    });
 
-        window.addEventListener("click", enableAudio);
-        window.addEventListener("touchstart", enableAudio);
-        window.addEventListener("keydown", enableAudio);
-
-        // Toggle mute when button is clicked
-        volumeBtn.addEventListener("click", () => {
-            audio.muted = !audio.muted;
-            updateButton();
-        });
-
-        // Update icon
-        function updateButton() {
-            volumeBtn.textContent = audio.muted ? "🔇" : "🔊";
-        }
-    </script>
-
+    function updateVolumeIcon() {
+      volumeBtn.textContent = audio.muted ? "🔇" : "🔊";
+    }
+  </script>
 </body>
-
 </html>
