@@ -22,7 +22,7 @@
         </div>
     </div>
 
-    <!-- Background Audio -->
+    <!-- Background Audio (autoplay muted) -->
     <audio id="bg-music" 
            src="https://r2.guns.lol/c0f65a19-48a4-4ee7-9ff5-c1c43291f7cd.mp3"
            autoplay 
@@ -34,23 +34,22 @@
     <script>
         const audio = document.getElementById("bg-music");
 
-        // Function to unmute + play audio after user interaction
-        function unmuteAudio() {
-            audio.muted = false;
-            audio.volume = 1.0;
+        // Unmute and play after the first user interaction
+        function enableAudio() {
+            audio.muted = false;       // unmute
+            audio.volume = 1.0;        // set volume
+            audio.play().catch(() => {}); // try to play
 
-            audio.play().catch(() => {});
-
-            // Remove listeners so it only triggers once
-            window.removeEventListener("click", unmuteAudio);
-            window.removeEventListener("keydown", unmuteAudio);
-            window.removeEventListener("touchstart", unmuteAudio);
+            // remove listeners so it only triggers once
+            window.removeEventListener("click", enableAudio);
+            window.removeEventListener("touchstart", enableAudio);
+            window.removeEventListener("keydown", enableAudio);
         }
 
-        // Any user interaction will unmute the audio
-        window.addEventListener("click", unmuteAudio);
-        window.addEventListener("keydown", unmuteAudio);
-        window.addEventListener("touchstart", unmuteAudio);
+        // Any gesture will unlock audio
+        window.addEventListener("click", enableAudio);
+        window.addEventListener("touchstart", enableAudio);
+        window.addEventListener("keydown", enableAudio);
     </script>
 
 </body>
