@@ -21,6 +21,18 @@
             <a href="contact.html" class="button">Contact</a>
         </div>
     </div>
+
+    <audio id="bg-music" src="https://r2.guns.lol/c0f65a19-48a4-4ee7-9ff5-c1c43291f7cd.mp3" autoplay loop></audio>
+
+    <script>
+        const audio = document.getElementById("bg-music");
+        document.addEventListener("click", () => {
+            if (audio.paused) {
+                audio.play().catch(() => {});
+            }
+        });
+    </script>
+
 </body>
 
 </html>
