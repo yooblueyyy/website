@@ -6,6 +6,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@yooblueyyy</title>
     <link rel="stylesheet" href="style.css" />
+
+    <style>
+        /* Volume Button Styles */
+        #volume-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            border: none;
+            padding: 12px 15px;
+            font-size: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            z-index: 9999;
+            user-select: none;
+        }
+
+        #volume-btn:hover {
+            background: rgba(0,0,0,0.9);
+        }
+    </style>
 </head>
 
 <body>
@@ -15,15 +37,14 @@
                 alt="yooblueyyy's Profile Picture" class="profile-img" />
         </a>
         <h1>Hey, I'm yooblueyyy!</h1>
-        <p>yuh
-        thank u cody for the code</p>
+        <p>yuh</p>
         <div class="buttons">
             <a href="links.html" class="button">Links</a>
             <a href="contact.html" class="button">Contact</a>
         </div>
     </div>
 
-    <!-- Background Audio (autoplay muted) -->
+    <!-- Background Audio -->
     <audio id="bg-music" 
            src="https://r2.guns.lol/c0f65a19-48a4-4ee7-9ff5-c1c43291f7cd.mp3"
            autoplay 
@@ -32,25 +53,40 @@
            playsinline>
     </audio>
 
+    <!-- Volume Toggle Button -->
+    <button id="volume-btn">🔇</button>
+
     <script>
         const audio = document.getElementById("bg-music");
+        const volumeBtn = document.getElementById("volume-btn");
 
-        // Unmute and play after the first user interaction
+        // Unlock audio after first user interaction
         function enableAudio() {
-            audio.muted = false;       // unmute
-            audio.volume = 1.0;        // set volume
-            audio.play().catch(() => {}); // try to play
+            audio.muted = false;
+            audio.volume = 1.0;
+            audio.play().catch(() => {});
 
-            // remove listeners so it only triggers once
             window.removeEventListener("click", enableAudio);
             window.removeEventListener("touchstart", enableAudio);
             window.removeEventListener("keydown", enableAudio);
+
+            updateButton();
         }
 
-        // Any gesture will unlock audio
         window.addEventListener("click", enableAudio);
         window.addEventListener("touchstart", enableAudio);
         window.addEventListener("keydown", enableAudio);
+
+        // Toggle mute when button is clicked
+        volumeBtn.addEventListener("click", () => {
+            audio.muted = !audio.muted;
+            updateButton();
+        });
+
+        // Update icon
+        function updateButton() {
+            volumeBtn.textContent = audio.muted ? "🔇" : "🔊";
+        }
     </script>
 
 </body>
