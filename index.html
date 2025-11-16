@@ -49,7 +49,7 @@
       background-color: #63b3ff;
     }
 
-    /* Music Player Styling */
+    /* Music Player Styling (fixed) */
     #music-player {
       position: fixed;
       bottom: 20px;
@@ -58,7 +58,6 @@
       background: rgba(0,0,0,0.7);
       border-radius: 15px;
       padding: 15px;
-      cursor: move;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -116,7 +115,7 @@
   <!-- Background Music -->
   <audio id="bg-music" loop playsinline></audio>
 
-  <!-- Draggable Music Player -->
+  <!-- Fixed Music Player -->
   <div id="music-player">
     <div id="track-name">Track 1</div>
     <div id="player-controls">
@@ -145,7 +144,7 @@
     audio.volume = 1;
     audio.play().catch(() => console.log("Autoplay blocked."));
 
-    // Play / Pause
+    // Play / Pause button
     playPauseBtn.addEventListener("click", () => {
       if (audio.paused) {
         audio.play();
@@ -156,7 +155,7 @@
       }
     });
 
-    // Mute
+    // Mute button
     muteBtn.addEventListener("click", () => {
       audio.muted = !audio.muted;
       updateMuteIcon();
@@ -173,29 +172,6 @@
       audio.muted = volume === 0;
       updateMuteIcon();
     });
-
-    // --- Draggable Music Player ---
-    const player = document.getElementById("music-player");
-    let isDragging = false;
-    let offsetX = 0;
-    let offsetY = 0;
-
-    player.addEventListener("mousedown", (e) => {
-      isDragging = true;
-      offsetX = e.clientX - player.getBoundingClientRect().left;
-      offsetY = e.clientY - player.getBoundingClientRect().top;
-    });
-
-    document.addEventListener("mousemove", (e) => {
-      if (!isDragging) return;
-      player.style.left = (e.clientX - offsetX) + "px";
-      player.style.top = (e.clientY - offsetY) + "px";
-    });
-
-    document.addEventListener("mouseup", () => {
-      isDragging = false;
-    });
   </script>
-
 </body>
 </html>
