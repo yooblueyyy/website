@@ -6,6 +6,98 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>yooblueyyy | Links</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('background.gif') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            text-align: center;
+        }
+
+        .container {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 40px;
+            border-radius: 20px;
+        }
+
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+        }
+
+        .buttons .button {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 20px;
+            color: white;
+            background-color: #1e90ff;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .buttons .button:hover {
+            background-color: #63b3ff;
+        }
+
+        /* Music Player Styling (fixed) */
+        #music-player {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 250px;
+            background: rgba(0,0,0,0.7);
+            border-radius: 15px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 1000;
+            user-select: none;
+        }
+
+        #music-player button {
+            margin: 5px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        #music-player button:hover {
+            background: rgba(255,255,255,0.4);
+        }
+
+        #track-name {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        #player-controls {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        #volume-slider {
+            width: 100%;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 
 <body>
@@ -25,49 +117,73 @@
         <div class="buttons">
             <a href="https://github.com/yooblueyyy" class="button" target="_blank">GitHub</a>
         </div>
-    </div>
 
-    <!-- Autoplaying audio -->
-    <audio id="bg-music" autoplay loop playsinline></audio>
-
-    <!-- Volume button -->
-    <button id="volume-btn">🔊</button>
-
-    <!-- Back button -->
-    <div class="extra-box">
         <div class="buttons">
             <button class="button" onclick="window.location.href='index.html'">Back</button>
         </div>
     </div>
 
+    <!-- Background Music -->
+    <audio id="bg-music" loop playsinline></audio>
+
+    <!-- Fixed Music Player -->
+    <div id="music-player">
+        <div id="track-name">Track 1</div>
+        <div id="player-controls">
+            <button id="play-pause">▶️</button>
+            <button id="mute-btn">🔊</button>
+        </div>
+        <input type="range" id="volume-slider" min="0" max="100" value="100">
+    </div>
+
     <script>
         const audio = document.getElementById("bg-music");
-        const volumeBtn = document.getElementById("volume-btn");
+        const playPauseBtn = document.getElementById("play-pause");
+        const muteBtn = document.getElementById("mute-btn");
+        const slider = document.getElementById("volume-slider");
+        const trackName = document.getElementById("track-name");
 
-        // Music Shuffle
         const tracks = [
-            "https://r2.guns.lol/c0f65a19-48a4-4ee7-9ff5-c1c43291f7cd.mp3",
-            "https://r2.guns.lol/1ab120d8-a5f3-4ed2-8590-295414af1ba2.mp3"
+            { src: "https://r2.guns.lol/c0f65a19-48a4-4ee7-9ff5-c1c43291f7cd.mp3", name: "Track 1" },
+            { src: "https://r2.guns.lol/1ab120d8-a5f3-4ed2-8590-295414af1ba2.mp3", name: "Track 2" }
         ];
-        audio.src = tracks[Math.floor(Math.random() * tracks.length)];
 
-        // Attempt unmuted autoplay
-        audio.muted = false;
-        audio.volume = 1.0;
+        // Pick random track
+        const randomTrack = tracks[Math.floor(Math.random() * tracks.length)];
+        audio.src = randomTrack.src;
+        trackName.textContent = randomTrack.name;
 
-        audio.play().catch(err => {
-            console.log("Autoplay blocked, waiting for user interaction...");
+        audio.volume = 1;
+        audio.play().catch(() => console.log("Autoplay blocked."));
+
+        // Play / Pause button
+        playPauseBtn.addEventListener("click", () => {
+            if (audio.paused) {
+                audio.play();
+                playPauseBtn.textContent = "⏸️";
+            } else {
+                audio.pause();
+                playPauseBtn.textContent = "▶️";
+            }
         });
 
-        // Volume button toggle
-        volumeBtn.addEventListener("click", () => {
+        // Mute button
+        muteBtn.addEventListener("click", () => {
             audio.muted = !audio.muted;
-            updateVolumeIcon();
+            updateMuteIcon();
         });
 
-        function updateVolumeIcon() {
-            volumeBtn.textContent = audio.muted ? "🔇" : "🔊";
+        function updateMuteIcon() {
+            muteBtn.textContent = audio.muted || audio.volume === 0 ? "🔇" : "🔊";
         }
+
+        // Volume slider
+        slider.addEventListener("input", () => {
+            const volume = slider.value / 100;
+            audio.volume = volume;
+            audio.muted = volume === 0;
+            updateMuteIcon();
+        });
     </script>
 
 </body>
