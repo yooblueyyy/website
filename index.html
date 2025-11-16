@@ -19,28 +19,41 @@
     </div>
   </div>
 
-  <audio id="bg-music" src="https://r2.guns.lol/c0f65a19-48a4-4ee7-9ff5-c1c43291f7cd.mp3" autoplay loop muted playsinline></audio>
+  <!-- Audio -->
+  <audio id="bg-music" autoplay loop muted playsinline></audio>
 
+  <!-- Volume button -->
   <button id="volume-btn">🔇</button>
 
   <script>
     const audio = document.getElementById("bg-music");
     const volumeBtn = document.getElementById("volume-btn");
 
+    // --- MUSIC SHUFFLE ---
+    const tracks = [
+      "https://r2.guns.lol/c0f65a19-48a4-4ee7-9ff5-c1c43291f7cd.mp3",
+      "https://r2.guns.lol/1ab120d8-a5f3-4ed2-8590-295414af1ba2.mp3"
+    ];
+    const randomTrack = tracks[Math.floor(Math.random() * tracks.length)];
+    audio.src = randomTrack;
+
+    // --- USER GESTURE UNLOCK ---
     function enableAudio() {
       audio.muted = false;
       audio.volume = 1.0;
       audio.play().catch(() => {});
+      updateVolumeIcon();
+
       window.removeEventListener("click", enableAudio);
       window.removeEventListener("touchstart", enableAudio);
       window.removeEventListener("keydown", enableAudio);
-      updateVolumeIcon();
     }
 
     window.addEventListener("click", enableAudio);
     window.addEventListener("touchstart", enableAudio);
     window.addEventListener("keydown", enableAudio);
 
+    // --- VOLUME BUTTON ---
     volumeBtn.addEventListener("click", () => {
       audio.muted = !audio.muted;
       updateVolumeIcon();
